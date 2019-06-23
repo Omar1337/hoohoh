@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Game3
+namespace Game4
 {
     /// <summary>
     /// This is the main type for your game.
@@ -12,8 +12,7 @@ namespace Game3
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D Auto;
-        Vector2 position;
+        private Sprite sprite1;
 
         public Game1()
         {
@@ -44,11 +43,13 @@ namespace Game3
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            var texture = Content.Load<Texture2D>("player");
 
-            Auto = Content.Load<Texture2D>("player");
-            position = new Vector2(0, 0);
+            sprite1 = new Sprite(texture)
+            {
+                Position = new Vector2(0, 0)
+            };
         }
-
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -69,22 +70,7 @@ namespace Game3
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             */
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                position.Y -= 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                position.Y += 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                position.X -= 1;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                position.X += 1;
-            }
+            sprite1.Update();
 
             // TODO: Add your update logic here
 
@@ -101,7 +87,7 @@ namespace Game3
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(Auto, position, Color.White);
+            sprite1.Draw(spriteBatch);
 
             spriteBatch.End();
 
