@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game4.sprite
+/*
+ * namespace Game4.sprite
 {
     class Sprite
     {
@@ -31,7 +32,7 @@ namespace Game4.sprite
                 return new Rectangle((int)Position.X, (int)Position.Y, Auto.Width, Auto.Height);
             }
         }
-        /*
+        
         public void Update()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -51,7 +52,7 @@ namespace Game4.sprite
                 Position.X += Speed;
             }
         }
-        */
+        
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Auto, Position, Color.White);
@@ -87,5 +88,31 @@ namespace Game4.sprite
                 this.Rectangle.Left < sprite.Rectangle.Right;
         }
         #endregion 
+    }
+}
+*/
+
+namespace Game4.sprite
+{
+    public class Sprite : Component
+    {
+        protected Texture2D _texture;
+        public Vector2 Position { get; set; }
+        public Rectangle Rectangle
+        {
+            get { return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height); }
+        }
+        public override void Draw(GameTime gametime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_texture, Position, Color.White);
+        }
+        public Sprite(Texture2D texture)
+        {
+            _texture = texture;
+        }
+        public override void Update(GameTime gameTime)
+        {
+          
+        }
     }
 }

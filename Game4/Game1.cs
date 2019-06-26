@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game4.sprite;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System.Collections.Generic;
 namespace Game4
 {
     /// <summary>
@@ -12,7 +13,17 @@ namespace Game4
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Sprite sprite1;
+        public static int ScreenHeight;
+
+        public static int ScreenWidth;
+
+        //private Sprite sprite1;
+
+        private Camera _camera;
+
+        private List<Component> _components;
+
+        private Player _player;
 
         public Game1()
         {
@@ -30,6 +41,11 @@ namespace Game4
         {
             // TODO: Add your initialization logic here
 
+            ScreenHeight = graphics.PreferredBackBufferHeight;
+
+            ScreenWidth = graphics.PreferredBackBufferWidth;
+
+
             base.Initialize();
         }
 
@@ -40,15 +56,29 @@ namespace Game4
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
 
             // TODO: use this.Content to load your game content here
-            var texture = Content.Load<Texture2D>("player");
+            //var texture = Content.Load<Texture2D>("player");
 
-            sprite1 = new Sprite(texture)
+            /*sprite1 = new Sprite(texture)
             {
                 Position = new Vector2(0, 0)
             };
+            */
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _camera = new Camera();
+
+            _player = new Player(Content.Load<Texture2D>("player"));
+
+            _components = new List<Component>()
+            {
+                new Sprite(Content.Load<Texture2D>("Background")),
+                _player,
+            };
+
+
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -70,9 +100,16 @@ namespace Game4
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             */
-            sprite1.Update();
+            //sprite1.Update();
 
             // TODO: Add your update logic here
+
+            foreach (var component in _components)
+                component.Update(gameTime);
+
+            _camera.Follow(_player);
+
+
 
             base.Update(gameTime);
         }
@@ -85,15 +122,20 @@ namespace Game4
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            /* spriteBatch.Begin();
 
-            sprite1.Draw(spriteBatch);
+             sprite1.Draw(spriteBatch);
 
-            spriteBatch.End();
-
+             spriteBatch.End();
+             */
             // TODO: Add your drawing code here
 
+            spriteBatch.Begin(transformMatrix: _camera.Transform);
 
+            foreach (var component in _components)
+                component.Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
